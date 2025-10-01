@@ -22,7 +22,9 @@ class _IndexPageState extends State<IndexPage> {
 
   @override
   Widget build(BuildContext context) {
-    return ListView(children: [Text("Index Page"), Text("Index Page")]);
+    return ListView(
+      children: callers.map((x) => Text(x.number ?? "No Number")).toList(),
+    );
   }
 
   Future setCallLog() async {
