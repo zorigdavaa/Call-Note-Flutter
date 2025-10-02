@@ -1,11 +1,12 @@
+import 'package:call_log/call_log.dart';
+
 class NotedCaller {
-  NotedCaller();
-  NotedCaller.full(
+  NotedCaller(
     this.name,
     this.cachedMatchedNumber,
     this.cachedNumberLabel,
     this.cachedNumberType,
-    this.callType,
+    this.myCallType,
     this.duration,
     this.formattedNumber,
     this.id,
@@ -15,6 +16,21 @@ class NotedCaller {
     this.simDisplayName,
     this.timestamp,
   );
+  NotedCaller.empty();
+  NotedCaller.fromCallLog(CallLogEntry log, this.notes) {
+    name = log.name;
+    number = log.number;
+    formattedNumber = log.formattedNumber;
+    myCallType = _convertType(log.callType);
+    duration = log.duration;
+    timestamp = log.timestamp;
+    cachedNumberType = log.cachedNumberType;
+    cachedNumberLabel = log.cachedNumberLabel;
+    cachedMatchedNumber = log.cachedMatchedNumber;
+    simDisplayName = log.simDisplayName;
+    phoneAccountId = log.phoneAccountId;
+    id = log.id;
+  }
 
   /// contact name
   String? name;
@@ -26,7 +42,7 @@ class NotedCaller {
   String? formattedNumber;
 
   /// type of call entry. see CallType
-  CallType? callType;
+  MyCallType? myCallType;
 
   /// duration in seconds
   int? duration;
@@ -52,10 +68,27 @@ class NotedCaller {
   /// Call log entry ID
   String? id;
   List<String> notes = List.empty();
+
+  MyCallType _convertType(CallType? type) {
+    switch (type) {
+      case CallType.incoming:
+        return MyCallType.incoming;
+      case CallType.outgoing:
+        return MyCallType.outgoing;
+      case CallType.missed:
+        return MyCallType.missed;
+      case CallType.rejected:
+        return MyCallType.rejected;
+      case CallType.blocked:
+        return MyCallType.blocked;
+      default:
+        return MyCallType.unknown;
+    }
+  }
 }
 
 /// All possible call types
-enum CallType {
+enum MyCallType {
   /// incoming call
   incoming,
 
@@ -65,24 +98,12 @@ enum CallType {
   /// missed incoming call
   missed,
 
-  /// voicemail call
-  voiceMail,
-
   /// rejected incoming call
   rejected,
 
   /// blocked incoming call
   blocked,
 
-  /// todo comment
-  answeredExternally,
-
   /// unknown type of call
   unknown,
-
-  /// wifi incoming
-  wifiIncoming,
-
-  ///wifi outgoing
-  wifiOutgoing,
 }

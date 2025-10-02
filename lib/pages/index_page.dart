@@ -11,7 +11,7 @@ class IndexPage extends StatefulWidget {
 }
 
 class _IndexPageState extends State<IndexPage> {
-  List<CallLogEntry> callers = List.empty();
+  List<NotedCaller> callers = List.empty();
 
   @override
   void initState() {
@@ -23,14 +23,25 @@ class _IndexPageState extends State<IndexPage> {
   @override
   Widget build(BuildContext context) {
     return ListView(
-      children: callers.map((x) => Text(x.number ?? "No Number")).toList(),
+      children: callers
+          .map(
+            (x) => ListTile(
+              // leading: Text(x.number ?? "No Number"),
+              title: Text(x.number ?? "No Number"),
+              subtitle: Text(x.number ?? "No Number"),
+              trailing: Text(x.number ?? "No Number"),
+            ),
+          )
+          .toList(),
     );
   }
 
   Future setCallLog() async {
     final Iterable<CallLogEntry> result = await getCallLogs();
     setState(() {
-      callers = result.toList();
+      callers = result
+          .map((x) => NotedCaller.fromCallLog(x, List.empty()))
+          .toList();
     });
   }
 }
