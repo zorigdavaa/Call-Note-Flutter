@@ -9,20 +9,33 @@ bool _permissionDenied = false;
 Future<Iterable<CallLogEntry>> getCallLogs() async {
   Iterable<CallLogEntry> cLog = Iterable.empty();
   List<Contact> contacts = List.empty();
+  Map<String, String> numAndName = {};
   try {
     cLog = await CallLog.get();
-    if (await FlutterContacts.requestPermission(readonly: true)) {
+    if (await FlutterContacts.requestPermission()) {
       contacts = await FlutterContacts.getContacts();
+      for (var contact in contacts) {
+        for (var phone in contact.phones) {
+          numAndName[phone.number] = contact.name.last;
+        }
+      }
       for (var log in cLog) {
-        String displayName = contacts
-            .firstWhere(
-              (x) => x.phones.any((g) => g.number == log.number.toString()),
-            )
-            .displayName;
-        log.name = displayName;
+        if (numAndName.containsKey(log.number)) {
+          log.name = numAndName[log.number];
+          print("name found ${log.name}");
+        } else {
+          log.name = null;
+        }
+
+        // String displayName = contacts
+        //     .firstWhere(
+        //       (x) => x.phones.any((g) => g.number == log.number.toString()),
+        //     )
+        //     .displayName;
       }
     } else {
       _permissionDenied = true;
+      print("No permissuib");
     }
   } on PlatformException catch (e, s) {
     print(e);

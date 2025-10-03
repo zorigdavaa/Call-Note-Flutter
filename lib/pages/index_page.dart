@@ -20,15 +20,37 @@ class _IndexPageState extends State<IndexPage> {
     super.initState();
   }
 
+  TextEditingController controller = TextEditingController();
   @override
   Widget build(BuildContext context) {
     return ListView(
       children: [
         Text("Count is ${callers.length}"),
-        for (int i = 0; i < callers.length; i++)
+        for (var caller in callers)
           ListTile(
-            title: Text(callers[i].number ?? "No Number"),
-            subtitle: Text(callers[i].name ?? ""),
+            title: Text(caller.displayName),
+            subtitle: Text(caller.myCallType?.name ?? "no type"),
+            trailing: caller.notes.isNotEmpty
+                ? Text(caller.notes[0].toString())
+                : null,
+            onTap: () {
+              showDialog(
+                context: context,
+                builder: (BuildContext builder) => SimpleDialog(
+                  title: Text(caller.displayName),
+                  children: [
+                    TextField(
+                      controller: controller,
+                      onChanged: (value) {
+                        setState(() {
+                          caller.notes[0] = value;
+                        });
+                      },
+                    ),
+                  ],
+                ),
+              );
+            },
           ),
 
         // callers

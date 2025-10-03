@@ -31,6 +31,9 @@ class NotedCaller {
     phoneAccountId = log.phoneAccountId;
     id = log.id;
   }
+  String get displayName =>
+      (name != null && name != "") ? name! : (number ?? "No Name");
+  bool get hasName => name != null || name == "";
 
   /// contact name
   String? name;
