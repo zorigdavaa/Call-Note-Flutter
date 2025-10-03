@@ -23,16 +23,25 @@ class _IndexPageState extends State<IndexPage> {
   @override
   Widget build(BuildContext context) {
     return ListView(
-      children: callers
-          .map(
-            (x) => ListTile(
-              // leading: Text(x.number ?? "No Number"),
-              title: Text(x.number ?? "No Number"),
-              subtitle: Text(x.number ?? "No Number"),
-              trailing: Text(x.number ?? "No Number"),
-            ),
-          )
-          .toList(),
+      children: [
+        Text("Count is $callers.length"),
+        for (int i = 0; i < callers.length; i++)
+          ListTile(
+            title: Text(callers[i].number ?? "No Number"),
+            subtitle: Text(callers[i].name ?? ""),
+          ),
+
+        // callers
+        //     .map(
+        //       (x) => ListTile(
+        //         // leading: Text(x.number ?? "No Number"),
+        //         title: Text(x.number ?? "No Number"),
+        //         subtitle: Text(x.name ?? "No Number"),
+        //         trailing: Text(x.number ?? "No Number"),
+        //       ),
+        //     )
+        //     .toList(),
+      ],
     );
   }
 
