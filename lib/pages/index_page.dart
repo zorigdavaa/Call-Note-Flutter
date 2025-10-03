@@ -24,7 +24,7 @@ class _IndexPageState extends State<IndexPage> {
   Widget build(BuildContext context) {
     return ListView(
       children: [
-        Text("Count is $callers.length"),
+        Text("Count is ${callers.length}"),
         for (int i = 0; i < callers.length; i++)
           ListTile(
             title: Text(callers[i].number ?? "No Number"),
@@ -51,6 +51,7 @@ class _IndexPageState extends State<IndexPage> {
       callers = result
           .map((x) => NotedCaller.fromCallLog(x, List.empty()))
           .toList();
+      print("${callers.length} callers retrieved");
     });
   }
 }

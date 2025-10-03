@@ -13,17 +13,16 @@ Future<Iterable<CallLogEntry>> getCallLogs() async {
     cLog = await CallLog.get();
     if (await FlutterContacts.requestPermission(readonly: true)) {
       contacts = await FlutterContacts.getContacts();
+      for (var log in cLog) {
+        String displayName = contacts
+            .firstWhere(
+              (x) => x.phones.any((g) => g.number == log.number.toString()),
+            )
+            .displayName;
+        log.name = displayName;
+      }
     } else {
       _permissionDenied = true;
-    }
-
-    for (var log in cLog) {
-      String displayName = contacts
-          .firstWhere(
-            (x) => x.phones.any((g) => g.number == log.number.toString()),
-          )
-          .displayName;
-      log.name = displayName;
     }
   } on PlatformException catch (e, s) {
     print(e);
