@@ -12,6 +12,7 @@ class IndexPage extends StatefulWidget {
 
 class _IndexPageState extends State<IndexPage> {
   List<NotedCaller> callers = [];
+  Map<NotedCaller, TextEditingController> controllers = {};
 
   @override
   void initState() {
@@ -20,7 +21,6 @@ class _IndexPageState extends State<IndexPage> {
     super.initState();
   }
 
-  TextEditingController controller = TextEditingController();
   @override
   Widget build(BuildContext context) {
     return ListView(
@@ -40,17 +40,21 @@ class _IndexPageState extends State<IndexPage> {
                   title: Text(caller.displayName),
                   children: [
                     TextField(
-                      // controller: controller,
+                      controller: controllers[caller],
                       onChanged: (value) {
                         setState(() {
-                          print("Setting state $value");
+                          // print("Setting state $value");
                           Note note = Note(
                             type: NoteType.plainText,
                             content: value,
                           );
-                          caller.notes.add(note);
+                          if (caller.notes.isEmpty) {
+                            caller.notes.add(note);
+                          }
+                          caller.notes[0] = note;
                         });
                       },
+                      textInputAction: TextInputAction.go,
                     ),
                   ],
                 ),
@@ -75,9 +79,10 @@ class _IndexPageState extends State<IndexPage> {
   Future setCallLog() async {
     final Iterable<CallLogEntry> result = await getCallLogs();
     setState(() {
-      callers = result
-          .map((x) => NotedCaller.fromCallLog(x, List.empty()))
-          .toList();
+      callers = result.map((x) => NotedCaller.fromCallLog(x, [])).toList();
+      for (var caller in callers) {
+        controllers[caller] = TextEditingController();
+      }
       print("${callers.length} callers retrieved");
     });
   }
