@@ -15,8 +15,19 @@ Future<Iterable<CallLogEntry>> getCallLogs() async {
     if (await FlutterContacts.requestPermission()) {
       contacts = await FlutterContacts.getContacts();
       for (var contact in contacts) {
+        print(contact.displayName);
+        print(contact.phones);
+        print(contact.addresses);
+        print(contact.emails);
+        print(contact.accounts);
+
+        if (contact.phones.isNotEmpty) {
+          print(contact.phones[0]);
+        }
         for (var phone in contact.phones) {
-          numAndName[phone.number] = contact.name.last;
+          numAndName[phone.number] = contact.displayName;
+          print(contact.displayName);
+          print(phone.number);
         }
       }
       for (var log in cLog) {
@@ -25,6 +36,7 @@ Future<Iterable<CallLogEntry>> getCallLogs() async {
           print("name found ${log.name}");
         } else {
           log.name = null;
+          print("name not found ${log.name}");
         }
 
         // String displayName = contacts

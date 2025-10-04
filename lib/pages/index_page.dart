@@ -11,7 +11,7 @@ class IndexPage extends StatefulWidget {
 }
 
 class _IndexPageState extends State<IndexPage> {
-  List<NotedCaller> callers = List.empty();
+  List<NotedCaller> callers = [];
 
   @override
   void initState() {
@@ -31,8 +31,8 @@ class _IndexPageState extends State<IndexPage> {
             title: Text(caller.displayName),
             subtitle: Text(caller.myCallType?.name ?? "no type"),
             trailing: caller.notes.isNotEmpty
-                ? Text(caller.notes[0].toString())
-                : null,
+                ? Text(caller.notes[0].content.toString())
+                : Text("No notes"),
             onTap: () {
               showDialog(
                 context: context,
@@ -40,10 +40,15 @@ class _IndexPageState extends State<IndexPage> {
                   title: Text(caller.displayName),
                   children: [
                     TextField(
-                      controller: controller,
+                      // controller: controller,
                       onChanged: (value) {
                         setState(() {
-                          caller.notes[0] = value;
+                          print("Setting state $value");
+                          Note note = Note(
+                            type: NoteType.plainText,
+                            content: value,
+                          );
+                          caller.notes.add(note);
                         });
                       },
                     ),

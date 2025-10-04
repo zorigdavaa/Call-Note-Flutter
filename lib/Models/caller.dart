@@ -70,7 +70,7 @@ class NotedCaller {
 
   /// Call log entry ID
   String? id;
-  List<String> notes = List.empty();
+  List<Note> notes = [];
 
   MyCallType _convertType(CallType? type) {
     switch (type) {
@@ -110,3 +110,33 @@ enum MyCallType {
   /// unknown type of call
   unknown,
 }
+
+class Note {
+  final NoteType type;
+  final String content; // for plain text or raw text
+  final List<String>? items; // optional list for lists
+  final List<bool>? checked; // optional checkbox states
+
+  Note({required this.type, required this.content, this.items, this.checked});
+
+  Map<String, dynamic> toJson() => {
+    'type': type.name,
+    'content': content,
+    'items': items,
+    'checked': checked,
+  };
+  @override
+  noSuchMethod(Invocation invocation) {
+    // TODO: implement noSuchMethod
+    return super.noSuchMethod(invocation);
+  }
+
+  factory Note.fromJson(Map<String, dynamic> json) => Note(
+    type: NoteType.values.firstWhere((e) => e.name == json['type']),
+    content: json['content'] ?? '',
+    items: (json['items'] as List?)?.cast<String>(),
+    checked: (json['checked'] as List?)?.cast<bool>(),
+  );
+}
+
+enum NoteType { plainText, orderedList, unorderedList, checkboxList }
