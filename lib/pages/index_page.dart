@@ -30,9 +30,11 @@ class _IndexPageState extends State<IndexPage> {
           ListTile(
             title: Text(caller.displayName),
             subtitle: Text(caller.myCallType?.name ?? "no type"),
-            trailing: caller.notes.isNotEmpty
-                ? Text(caller.notes[0].content.toString())
-                : Text("No notes"),
+            trailing: Text(
+              caller.notes.isNotEmpty
+                  ? caller.notes[0].content.toString()
+                  : "No notes",
+            ),
             onTap: () {
               showDialog(
                 context: context,
@@ -41,6 +43,8 @@ class _IndexPageState extends State<IndexPage> {
                   children: [
                     TextField(
                       controller: controllers[caller],
+                      minLines: 5,
+                      maxLines: null,
                       onChanged: (value) {
                         setState(() {
                           // print("Setting state $value");
@@ -54,7 +58,6 @@ class _IndexPageState extends State<IndexPage> {
                           caller.notes[0] = note;
                         });
                       },
-                      textInputAction: TextInputAction.go,
                     ),
                   ],
                 ),
